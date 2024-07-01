@@ -1,11 +1,48 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable no-unused-vars */
 import Indicators from "./Indicators";
 import Slide from "./Slide";
 
-const Carousel = () => {
+import { useEffect, useState } from "react";
+
+const Carousel = ({ imageUrls }) => {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [manualChange, setManualChange] = useState(false);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (!manualChange) {
+        setActiveIndex((prevIndex) => (prevIndex + 1) % imageUrls.length);
+      }
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [manualChange, imageUrls.length]);
+
+  const goPrev = () => {
+    setManualChange(true);
+    setActiveIndex(
+      (prevIndex) => (prevIndex - 1 + imageUrls.length) % imageUrls.length
+    );
+  };
+
+  const goNext = () => {
+    setManualChange(true);
+    setActiveIndex((prevIndex) => (prevIndex + 1) % imageUrls.length);
+  };
+
   return (
     <div className="carousel">
-      <Slide />
-      <Indicators />
+      {imageUrls.map((url, index) => (
+        <Slide key={index} url={url} isActive={activeIndex === index} />
+      ))}
+      <Indicators activeIndex={activeIndex} length={imageUrls.length} />
+      <button className="carousel-button prev" onClick={goPrev}>
+        Anterior
+      </button>
+      <button className="carousel-button next" onClick={goNext}>
+        Próximo
+      </button>
     </div>
   );
 };

@@ -1,7 +1,8 @@
-const Slide = () => {
+/* eslint-disable react/prop-types */
+const Slide = ({ url, isActive }) => {
   return (
-    <div>
-      <h1>Slide</h1>
+    <div className={isActive ? "slide active" : "slide"}>
+      <img src={url} />
     </div>
   );
 };
